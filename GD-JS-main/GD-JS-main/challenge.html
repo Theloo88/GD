@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Gioco v1.3</title>
+    <link rel="stylesheet" href="css.css" />
+    <script src="//cdn.jsdelivr.net/npm/phaser@3.11.0/dist/phaser.js"></script>
+    <style type="text/css">
+      body {
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <button id="lvl1">lvl 1</button>
+      <button id="lvl2">lvl 2</button>
+      <button id="lvl3">lvl 3</button>
+      <button id="lvl4">lvl 4</button>
+      <button id="lvl5">lvl 5</button>
+      <button id="challenge">challenge</button>
+    </div>
+    <h1>Challenge</h1>
+    <div id="game"></div>
+    <div class="options">
+      <button id="WAD">W Keys</button>
+      <button id="arrow">Up arrow Keys</button>
+      <p id="current"></p>
+      <button id="space">SpaceBar</button>
+      <p id="spacebar"></p>
+      <p>
+        ShowHitbox and speedhack it will not count as level finished (Reset
+        speedhack by setting it x1)
+      </p>
+      <button id="hitbox">Show Hitbox</button>
+      <button id="noclip">Noclip</button>
+      <input id="speed" placeholder="Speedhack 1.2, 2...." />
+      <button id="Speedhack">Invio (speedhack)</button>
+      <button id="fps">Fps bypass</button>
+      <input id="infps" placeholder="60, 140, 240, 360..." />
+      <p>How to play</p>
+      <p>Jump: Up arrow, w or spacebar if you enable it</p>
+      <p>R = Replay from last Checkpoint</p>
+    </div>
+
+    <script src="src/challenge.js" type="module"></script>
+
+    <script>
+      const fpsbypass = document.getElementById("fps");
+      fpsbypass.addEventListener("click", (e) => {
+        let valuefps = document.getElementById("infps").value;
+        if (valuefps > 20) {
+          localStorage.setItem("fps", valuefps);
+          window.location.reload();
+        }
+      });
+      const lvl1 = document.getElementById("lvl1");
+      lvl1.addEventListener("click", (e) => {
+        window.location.href = "/";
+      });
+
+      const lvl2 = document.getElementById("lvl2");
+      lvl2.addEventListener("click", (e) => {
+        window.location.href = "/lvl2.html";
+      });
+
+      const lvl3 = document.getElementById("lvl3");
+      lvl3.addEventListener("click", (e) => {
+        window.location.href = "/lvl3.html";
+      });
+
+      const lvl4 = document.getElementById("lvl4");
+      lvl4.addEventListener("click", (e) => {
+        window.location.href = "/lvl4.html";
+      });
+
+      const lvl5 = document.getElementById("lvl5");
+      lvl5.addEventListener("click", (e) => {
+        window.location.href = "/lvl5.html";
+      });
+
+      const ch = document.getElementById("challenge");
+      ch.addEventListener("click", (e) => {
+        window.location.href = "/challenge.html";
+      });
+
+      const hitbox = document.getElementById("hitbox");
+      hitbox.addEventListener("click", (e) => {
+        if (localStorage.getItem("hitbox") == 1) {
+          localStorage.setItem("hitbox", "0");
+          location.reload();
+        } else {
+          localStorage.setItem("hitbox", "1");
+          location.reload();
+        }
+      });
+      const noclip = document.getElementById("noclip");
+      noclip.addEventListener("click", (e) => {
+        if (
+          localStorage.getItem("noclip") == null ||
+          localStorage.getItem("noclip") == "on"
+        ) {
+          localStorage.setItem("noclip", "off");
+        } else {
+          localStorage.setItem("noclip", "on");
+        }
+      });
+
+      const Speedhack = document.getElementById("Speedhack");
+      Speedhack.addEventListener("click", (e) => {
+        if (localStorage.getItem("speedhack") == null) {
+          localStorage.setItem("speedhack", 1);
+        } else {
+          let valuespeed = document.getElementById("speed").value;
+          if (valuespeed != 0) {
+            localStorage.setItem("speedhack", valuespeed);
+          }
+        }
+      });
+      const wad = document.getElementById("WAD");
+      wad.addEventListener("click", (e) => {
+        localStorage.setItem("gamekey", "wad");
+        const current = document.getElementById("current");
+        current.innerText = "Current keys: " + localStorage.getItem("gamekey");
+      });
+      const arrow1 = document.getElementById("arrow");
+      arrow1.addEventListener("click", (e) => {
+        localStorage.setItem("gamekey", "arrow");
+        const current = document.getElementById("current");
+        current.innerText = "Current keys: w";
+      });
+      const current = document.getElementById("current");
+      current.innerText = "Current keys: " + localStorage.getItem("gamekey");
+
+      if (localStorage.getItem("gamekey") == null) {
+        localStorage.setItem("gamekey", "WAD");
+      }
+
+      if (localStorage.getItem("spacebar") == null) {
+        localStorage.setItem("spacebar", "on");
+      }
+      const space = document.getElementById("space");
+      space.addEventListener("click", (e) => {
+        if (localStorage.getItem("spacebar") == "on") {
+          localStorage.setItem("spacebar", "off");
+          const spacebar = document.getElementById("spacebar");
+          spacebar.innerText = "Spacebar: " + localStorage.getItem("spacebar");
+        } else if (localStorage.getItem("spacebar") == "off") {
+          localStorage.setItem("spacebar", "on");
+          const spacebar = document.getElementById("spacebar");
+          spacebar.innerText = "Spacebar: " + localStorage.getItem("spacebar");
+        }
+      });
+
+      const spacebar = document.getElementById("spacebar");
+      spacebar.innerText = "Spacebar: " + localStorage.getItem("spacebar");
+    </script>
+  </body>
+</html>

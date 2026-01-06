@@ -1,0 +1,22 @@
+canvas {
+  display: block;
+  margin: auto;
+  transform: translateY(7%);
+  border-radius: 10px;
+}
+.options {
+  margin-top: 5rem;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+h1 {
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  margin-bottom: -2.5rem;
+}
