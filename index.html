@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Games Deluxe</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #13131c;
+    --surface2: #1a1a28;
+    --border: rgba(255,255,255,0.07);
+    --accent: #ff3d57;
+    --accent2: #ff8c42;
+    --text: #e8e8f0;
+    --muted: #6b6b88;
+    --glow: rgba(255,61,87,0.25);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text);
+    min-height: 100vh;
+    padding: 0 0 60px;
+    overflow-x: hidden;
+  }
+
+  /* — Header — */
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(10,10,15,0.85);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 32px;
+    display: flex;
+    align-items: center;
+    gap: 28px;
+  }
+
+  .logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 30px;
+    letter-spacing: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* — Search — */
+  .search-wrap {
+    flex: 1;
+    max-width: 520px;
+    position: relative;
+  }
+
+  .search-wrap svg {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    pointer-events: none;
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+  }
+
+  #search {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 11px 16px 11px 42px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: border-color .2s, box-shadow .2s;
+  }
+
+  #search::placeholder { color: var(--muted); }
+
+  #search:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--glow);
+  }
+
+  .game-count {
+    font-size: 13px;
+    color: var(--muted);
+    white-space: nowrap;
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+
+  /* — Hero stripe — */
+  .hero-stripe {
+    background: linear-gradient(135deg, #1a0a10 0%, #0d0d1a 60%, #0a0a0f 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 36px 32px 32px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-stripe::before {
+    content: 'GAMES';
+    position: absolute;
+    right: -10px;
+    top: -20px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 140px;
+    color: rgba(255,61,87,0.05);
+    pointer-events: none;
+    user-select: none;
+    letter-spacing: 8px;
+  }
+
+  .hero-stripe h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px;
+    letter-spacing: 3px;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .hero-stripe h1 span {
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-stripe p {
+    color: var(--muted);
+    font-size: 14px;
+  }
+
+  /* — Main grid — */
+  .main {
+    padding: 32px;
+    max-width: 1440px;
+    margin: 0 auto;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  @media (max-width: 1200px) { .grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+  @media (max-width: 800px)  { .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media (max-width: 520px)  { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+  /* — Cards — */
+  .slot {
+    position: relative;
+    border-radius: 14px;
+    overflow: hidden;
+    cursor: pointer;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    transition: transform .25s cubic-bezier(.34,1.4,.64,1), box-shadow .25s ease, border-color .25s;
+    aspect-ratio: 1 / 1;
+  }
+
+  .slot-medium {
+    grid-column: span 2;
+    aspect-ratio: 4 / 3;
+  }
+
+  .slot:hover {
+    transform: scale(1.05) translateY(-3px);
+    box-shadow: 0 18px 40px rgba(0,0,0,0.5), 0 0 0 1px var(--accent);
+    border-color: var(--accent);
+    z-index: 2;
+  }
+
+  .slot a {
+    display: block;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .slot-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform .35s ease, filter .25s;
+    filter: brightness(0.9);
+  }
+
+  .slot:hover .slot-img {
+    transform: scale(1.08);
+    filter: brightness(1.05);
+  }
+
+  /* gradient overlay */
+  .slot::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      rgba(5,5,10,0.85) 0%,
+      rgba(5,5,10,0.1) 50%,
+      transparent 100%
+    );
+    pointer-events: none;
+    transition: opacity .25s;
+  }
+
+  .slot-label {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    right: 10px;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    z-index: 1;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color .2s;
+  }
+
+  .slot:hover .slot-label { color: var(--accent2); }
+
+  /* play button on hover */
+  .play-btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -48%) scale(0.7);
+    width: 42px;
+    height: 42px;
+    background: var(--accent);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    opacity: 0;
+    transition: opacity .2s, transform .25s cubic-bezier(.34,1.4,.64,1);
+    box-shadow: 0 4px 20px rgba(255,61,87,0.5);
+  }
+
+  .play-btn svg {
+    width: 16px;
+    height: 16px;
+    fill: #fff;
+    margin-left: 2px;
+  }
+
+  .slot:hover .play-btn {
+    opacity: 1;
+    transform: translate(-50%, -54%) scale(1);
+  }
+
+  /* — No results — */
+  .no-results {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 80px 20px;
+    display: none;
+  }
+
+  .no-results.show { display: block; }
+
+  .no-results svg {
+    width: 48px;
+    height: 48px;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+
+  .no-results h3 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: var(--text);
+  }
+
+  .no-results p { color: var(--muted); font-size: 14px; }
+
+  /* — Fade in animation — */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .slot {
+    animation: fadeUp .4s ease both;
+  }
+
+  /* stagger */
+  .slot:nth-child(1)  { animation-delay: .03s }
+  .slot:nth-child(2)  { animation-delay: .06s }
+  .slot:nth-child(3)  { animation-delay: .09s }
+  .slot:nth-child(4)  { animation-delay: .12s }
+  .slot:nth-child(5)  { animation-delay: .15s }
+  .slot:nth-child(6)  { animation-delay: .18s }
+  .slot:nth-child(7)  { animation-delay: .21s }
+  .slot:nth-child(8)  { animation-delay: .24s }
+  .slot:nth-child(9)  { animation-delay: .27s }
+  .slot:nth-child(10) { animation-delay: .30s }
+  .slot:nth-child(11) { animation-delay: .33s }
+  .slot:nth-child(12) { animation-delay: .36s }
+
+  /* hidden by search */
+  .slot.hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<!-- Sticky header with search -->
+<header class="header">
+  <div class="logo">Games Deluxe</div>
+  <div class="search-wrap">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+    </svg>
+    <input id="search" type="text" placeholder="Search games…" autocomplete="off" />
+  </div>
+  <div class="game-count" id="countBadge">Loading…</div>
+</header>
+
+<!-- Hero -->
+<div class="hero-stripe">
+  <h1>Welcome To <span>GAMES DELUXE</span></h1>
+  <p>Click any game to play or search for your favorites!</p>
+</div>
+
+<!-- Grid -->
+<div class="main">
+  <div class="slots-grid grid" id="grid">
+
+    <div class="slot slot-medium" data-name="Stunt Bike Extreme">
+      <a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/stunt-bike-extreme">
+        <img class="slot-img" src="https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=188,height=188,fit=cover,f=auto/d115380307564d68096317ffd29cbcf9/stunt-bike-extreme.png">
+        <div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+        <span class="slot-label">Stunt Bike Extreme</span>
+      </a>
+    </div>
+
+    <div class="slot slot-medium" data-name="Poly Track">
+      <a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/poly-track">
+        <img class="slot-img" src="https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=188,height=188,fit=cover,f=auto/3fa3556b61d02fba189999605b1f304b/polytrack.png">
+        <div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+        <span class="slot-label">Poly Track</span>
+      </a>
+    </div>
+
+    <div class="slot slot-regular" data-name="Blackjack"><a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/blackjack"><img class="slot-img" src="https://tse1.mm.bing.net/th/id/OIP.lsIicaqDUENJ3O7ciAXHowHaHa?rs=1&pid=ImgDetMain&o=7&rm=3"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="slot-label">Blackjack</span></a></div>
+    <div class="slot slot-regular" data-name="Slope"><a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/slope"><img class="slot-img" src="https://slopeonline.online/upload/cache/upload/imgs/slope-game-v1-f260x260.png"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="slot-label">Slope</span></a></div>
+    <div class="slot slot-regular" data-name="Run 3"><a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/run-3"><img class="slot-img" src="https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=408,height=408,fit=cover,f=auto/d3c19e9b-9b7b-4a54-9cb5-6188a5bd7d3b/run-3.png"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="slot-label">Run 3</span></a></div>
+    <div class="slot slot-regular" data-name="Paper IO"><a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/paper-io"><img class="slot-img" src="https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=408,height=408,fit=cover,f=auto/56c9d36ff368dc7fc836db1b73861c2a/paper-2-io.jfif"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="slot-label">Paper IO</span></a></div>
+    <div class="slot slot-regular" data-name="A Small World Cup"><a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/a-small-world-cup"><img class="slot-img" src="https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=408,height=408,fit=cover,f=auto/a1cf6b8e304d09cfb81aad6bc3fe1cd2/a-small-world-cup.png"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="slot-label">A Small World Cup</span></a></div>
+    <div class="slot slot-regular" data-name="Drift Boss"><a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/drift-boss"><img class="slot-img" src="https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=408,height=408,fit=cover,f=auto/baf55f009fd63dd63c760a5dcfe79615/drift-boss.png"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="slot-label">Drift Boss</span></a></div>
+    <div class="slot slot-regular" data-name="Geometry Dash"><a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/geometry-dash"><img class="slot-img" src="https://th.bing.com/th/id/OIP.UaalH7l8pFUaCjCQq_vJ3wHaHa?w=108&h=108&c=1&bgcl=c39118&r=0&o=7&dpr=1.5&pid=ImgRC&rm=3"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="slot-label">Geometry Dash</span></a></div>
+    <div class="slot slot-regular" data-name="Subway Surfers"><a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/subway-surfers"><img class="slot-img" src="https://play-lh.googleusercontent.com/upYircnh6-mH07OxwtX7L0EPFd4_FNV71xd8w4gHiyLKopipJxwPzoupoQgpzgf8_Fk=s96-rw"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="slot-label">Subway Surfers</span></a></div>
+    <div class="slot slot-regular" data-name="Kart Bros"><a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/kart-bros"><img class="slot-img" src="https://trafficroad.io/data/image/kart-bros-tr1.jpg"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="slot-label">Kart Bros</span></a></div>
+    <div class="slot slot-regular" data-name="Jetpack Joyride"><a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/jetpack-joyride"><img class="slot-img" src="https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=408,height=408,fit=cover,f=auto/d5d34cb9ce7b617b93338982aa0958ab/jetpack-joyride.png"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="slot-label">Jetpack Joyride</span></a></div>
+    <div class="slot slot-regular" data-name="Retro Bowl"><a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/retro-bowl"><img class="slot-img" src="https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=408,height=408,fit=cover,f=auto/ee9ca3764ef4289a48a1ebf457ef605441ed1f35a0f2eb12707a70d609e53686/retro-bowl.png"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="slot-label">Retro Bowl</span></a></div>
+    <div class="slot slot-regular" data-name="Infinite Craft"><a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/infinite-craft"><img class="slot-img" src="https://th.bing.com/th/id/OIP.8LAtCye-WQKXsEEz56V_GAHaEQ?w=290&h=180&c=7&r=0&o=7&dpr=1.5&pid=1.7&rm=3"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="slot-label">Infinite Craft</span></a></div>
+    <div class="slot slot-regular" data-name="Basket Random"><a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/basket-random"><img class="slot-img" src="https://th.bing.com/th/id/OIP.8SM1aUw3ehKqtehzabzkLQAAAA?w=130&h=150&c=6&o=7&dpr=1.5&pid=1.7&rm=3"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="slot-label">Basket Random</span></a></div>
+    <div class="slot slot-regular" data-name="Super Track Racers"><a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/super-track-racers"><img class="slot-img" src="https://picon.ngfiles.com/551000/flash_551368.gif?f1287677289"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="slot-label">Super Track Racers</span></a></div>
+    <div class="slot slot-regular" data-name="Rocket League"><a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/rocket-league"><img class="slot-img" src="https://th.bing.com/th/id/OIP.youI1RcXg8l3BT8old4vDwHaHa?w=182&h=180&c=7&r=0&o=7&dpr=1.5&pid=1.7&rm=3"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="slot-label">Rocket League</span></a></div>
+    <div class="slot slot-regular" data-name="Snow Rider 3D"><a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/snow-rider-3d"><img class="slot-img" src="https://snow-rider3d.io/data/image/game/snow-rider-3d.jpg"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="slot-label">Snow Rider 3D</span></a></div>
+    <div class="slot slot-regular" data-name="Boxing Random"><a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/boxing-random"><img class="slot-img" src="https://tse2.mm.bing.net/th/id/OIP.XA9UG1-tqUBPhcH-L8Ds5wHaHa?rs=1&pid=ImgDetMain&o=7&rm=3"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="slot-label">Boxing Random</span></a></div>
+    <div class="slot slot-regular" data-name="Wordle"><a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/wordle"><img class="slot-img" src="https://wordlegame.org/assets/img/wordlegame.png"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="slot-label">Wordle</span></a></div>
+    <div class="slot slot-regular" data-name="Doodle Jump"><a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/doodle-jump"><img class="slot-img" src="https://doodle-jump2.github.io/data/image/game/doodle-jump-game.png"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="slot-label">Doodle Jump</span></a></div>
+    <div class="slot slot-regular" data-name="Level Devil"><a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/level-devil"><img class="slot-img" src="https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=408,height=408,fit=cover,f=auto/0c3d1446c6992c2b88a9498de054688b/level-devil.png"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="slot-label">Level Devil</span></a></div>
+    <div class="slot slot-regular" data-name="Trades"><a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/trades"><img class="slot-img" src="https://i.postimg.cc/VLktf9d2/an-image-featuring-t.png"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="slot-label">Trades</span></a></div>
+    <div class="slot slot-regular" data-name="Crossy Road"><a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/crossy-road"><img class="slot-img" src="https://th.bing.com/th/id/OIP.oltqZOiuVHNLYkttVtvinwHaHa?w=173&h=180&c=7&r=0&o=7&dpr=1.5&pid=1.7&rm=3&adlt=strict"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="slot-label">Crossy Road</span></a></div>
+    <div class="slot slot-regular" data-name="Pop The Lock"><a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/pop-the-lock"><img class="slot-img" src="https://www.gamerevolution.com/wp-content/uploads/sites/2/2022/10/co4sr6.jpg?w=1024"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="slot-label">Pop The Lock</span></a></div>
+    <div class="slot slot-regular" data-name="Music Tiles"><a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/music-tiles"><img class="slot-img" src="https://www.topgames.com/cdn-cgi/image/quality=78,width=1200,height=630,fit=pad,format=jpeg/thumb/onlinegames/Magic-Tiles-3.jpg"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="slot-label">Music Tiles</span></a></div>
+    <div class="slot slot-regular" data-name="Drive Mad"><a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/drive-mad"><img class="slot-img" src="https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=408,height=408,fit=cover,f=auto/07999e62a7fe5b1d62db4b6feb63ce7e/drive-mad.png"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="slot-label">Drive Mad</span></a></div>
+    <div class="slot slot-regular" data-name="Diep.io"><a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/diep-io"><img class="slot-img" src="https://www.appgefahren.de/wp-content/uploads/2016/07/deep.io-icon.jpg"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="slot-label">Diep.io</span></a></div>
+    <div class="slot slot-regular" data-name="Escape Road"><a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/escape-road"><img class="slot-img" src="https://traffic-rider.io/data/image/escaperoad.jpg"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="slot-label">Escape Road</span></a></div>
+    <div class="slot slot-regular" data-name="Tiny Fishing"><a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/tiny-fishing"><img class="slot-img" src="https://assets.humoq.com/cdn-cgi/image/quality=78,fit=cover,f=auto,width=3840/images/h512/tiny-fishing.webp"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="slot-label">Tiny Fishing</span></a></div>
+    <div class="slot slot-regular" data-name="Stickman Hook"><a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/stickman-hook"><img class="slot-img" src="https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=408,height=408,fit=cover,f=auto/99e090d154caf30f3625df7e456d5984/stickman-hook.png"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="slot-label">Stickman Hook</span></a></div>
+    <div class="slot slot-regular" data-name="Imposter"><a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/imposter"><img class="slot-img" src="https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/52/a4/1f/52a41f00-f59d-7e34-2d12-86bac4f92b07/Placeholder.mill/400x400bb-75.webp"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="slot-label">Imposter</span></a></div>
+    <div class="slot slot-regular" data-name="Flappy Bird"><a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/flappy-bird"><img class="slot-img" src="https://th.bing.com/th/id/OIP.k1HhORIW40PVstuQSQoNZAHaHa?w=144&h=180&c=7&r=0&o=7&dpr=1.5&pid=1.7&rm=3&adlt=strict"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="slot-label">Flappy Bird</span></a></div>
+    <div class="slot slot-regular" data-name="Soccer Random"><a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/soccer-random"><img class="slot-img" src="https://th.bing.com/th/id/OIP.eb0lbaIzDdVZUQ07MgfXAgHaHa?w=145&h=180&c=7&r=0&o=7&dpr=1.5&pid=1.7&rm=3&adlt=strict"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="slot-label">Soccer Random</span></a></div>
+    <div class="slot slot-regular" data-name="Doodle Baseball"><a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/doodle-baseball"><img class="slot-img" src="https://google-doodlebaseball.github.io/data/image/game/googlebaseball.png"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="slot-label">Doodle Baseball</span></a></div>
+    <div class="slot slot-regular" data-name="Hole.io"><a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/hole-io"><img class="slot-img" src="https://store-images.s-microsoft.com/image/apps.2546.13913341256106203.45d1d424-36cd-4359-b755-fc0370f95cb4.944a9140-cf95-46f0-9cd1-46354c0aebb2"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="slot-label">Hole.io</span></a></div>
+    <div class="slot slot-regular" data-name="Music Maker"><a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/music-maker"><img class="slot-img" src="https://img.freepik.com/premium-vector/music-notes-templates-clefs-musical-notes-warped-into-distance_747203-1134.jpg?w=2000"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="slot-label">Music Maker</span></a></div>
+    <div class="slot slot-regular" data-name="OvO"><a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/ovo"><img class="slot-img" src="https://th.bing.com/th/id/OIP.tAd8CrphZQ3fv-eO02t4mQAAAA?w=177&h=113&c=7&r=0&o=7&dpr=1.5&pid=1.7&rm=3&adlt=strict"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="slot-label">OvO</span></a></div>
+    <div class="slot slot-regular" data-name="Doodle Cricket"><a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/doodle-cricket"><img class="slot-img" src="https://th.bing.com/th/id/OIP.ddMSdIZh6fjuIx8T7ZaoYgHaHa?w=108&h=108&c=1&bgcl=5eeab3&r=0&o=7&dpr=1.5&pid=ImgRC&rm=3&adlt=strict"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="slot-label">Doodle Cricket</span></a></div>
+    <div class="slot slot-regular" data-name="Tag"><a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/tag"><img class="slot-img" src="https://cpsgames.org/thumbs/tag_2.webp"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="slot-label">Tag</span></a></div>
+    <div class="slot slot-regular" data-name="Space Waves"><a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/space-waves"><img class="slot-img" src="https://yupgames.io/_next/image?url=https:%2F%2Fs3.growsolutions.tech%2Fyupgames%2Fgames%2Fimages%2F1753684066083-Space%20Waves.jpg&w=640&q=75"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="slot-label">Space Waves</span></a></div>
+    <div class="slot slot-regular" data-name="Escape Road 2"><a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/escape-road-2"><img class="slot-img" src="https://escaperoad.io/cache/data/image/game/escape-road-2-f240x240.webp"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="slot-label">Escape Road 2</span></a></div>
+    <div class="slot slot-regular" data-name="Google Snake"><a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/google-snake"><img class="slot-img" src="https://pixiapi.com/wp-content/uploads/2024/01/google-snake-favicon.jpg"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="slot-label">Google Snake</span></a></div>
+    <div class="slot slot-regular" data-name="Sudoku"><a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/sudoku"><img class="slot-img" src="https://copilot.microsoft.com/th/id/BCO.603fdf99-0ade-404a-9a5f-f41b80982f0d.png"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="slot-label">Sudoku</span></a></div>
+    <div class="slot slot-regular" data-name="Sandboxels"><a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/sandboxels"><img class="slot-img" src="https://trampoline.turbowarp.org/thumbnails/1025444086"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="slot-label">Sandboxels</span></a></div>
+    <div class="slot slot-regular" data-name="Football Bros"><a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/football-bros"><img class="slot-img" src="https://thumbnails.gamenora.com/Football%20Bros.webp"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="slot-label">Football Bros</span></a></div>
+    <div class="slot slot-regular" data-name="Car King Arena"><a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/car-king-arena"><img class="slot-img" src="https://play-lh.googleusercontent.com/J_jzP8Bopqzbb8z07Bzc9glSY_n7uOvsWC9CL9MygtgrcMrSGiDGCFkaT-XtwfpDrRf2"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="slot-label">Car King Arena</span></a></div>
+    <div class="slot slot-regular" data-name="Baseball Bros"><a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/baseball-bros"><img class="slot-img" src="https://freegames.io/thumbs/baseball-bros_1.png"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="slot-label">Baseball Bros</span></a></div>
+    <div class="slot slot-regular" data-name="Geoguessr"><a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/geoguesser"><img class="slot-img" src="https://sm.ign.com/t/ign_za/cover/g/geoguessr/geoguessr_w63q.600.jpg"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="slot-label">Geoguessr</span></a></div>
+    <div class="slot slot-regular" data-name="Line Rider"><a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/line-rider"><img class="slot-img" src="https://assets-prd.ignimgs.com/2023/09/09/linerider-1694303839127.jpg"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="slot-label">Line Rider</span></a></div>
+    <div class="slot slot-regular" data-name="Dune Dash"><a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/dune-dash"><img class="slot-img" src="https://www.bestgames.com/cdn-cgi/image/quality=78,width=1200,height=630,fit=pad,format=jpeg/thumb/Dune.jpg"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="slot-label">Dune Dash</span></a></div>
+    <div class="slot slot-regular" data-name="House Of Hazards"><a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/house-of-hazards"><img class="slot-img" src="https://cdn-1.webcatalog.io/catalog/poki-house-of-hazards/poki-house-of-hazards-social-preview.png?v=1714779541602"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="slot-label">House Of Hazards</span></a></div>
+    <div class="slot slot-regular" data-name="Car King Arena 2"><a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/car-king-arena-2"><img class="slot-img" src="https://play-games.com/files/img/race-survival-arena-king-1710495246.jpg"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="slot-label">Car King Arena 2</span></a></div>
+    <div class="slot slot-regular" data-name="Soccer Bros 2"><a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/soccer-bros-2"><img class="slot-img" src="https://soccerbros.gg/splash.jpg"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="slot-label">Soccer Bros 2</span></a></div>
+    <div class="slot slot-regular" data-name="Rocketpult"><a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/rocketpult"><img class="slot-img" src="https://kbhgames.com/wp-content/uploads/2023/09/rocket-blow-destroy-planet-in-the-space-3d.jpg"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="slot-label">Rocketpult</span></a></div>
+    <div class="slot slot-regular" data-name="Riddle School 5"><a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/riddle-school-5"><img class="slot-img" src="https://i.ytimg.com/vi/mZstJ2DBQhM/hqdefault.jpg"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="slot-label">Riddle School 5</span></a></div>
+    <div class="slot slot-regular" data-name="Uno"><a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/uno"><img class="slot-img" src="https://images.seeklogo.com/logo-png/33/1/uno-card-logo-png_seeklogo-330076.png"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="slot-label">Uno</span></a></div>
+    <div class="slot slot-regular" data-name="Block Blast"><a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/block-blast"><img class="slot-img" src="https://play-lh.googleusercontent.com/R0qgNDYYHbRhw6JFsdEbDMqONplEvJx0m0W9wzYVvY3eNF1c2rfBWYjQxW0sLEzFe1E"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="slot-label">Block Blast</span></a></div>
+    <div class="slot slot-regular" data-name="Smash Karts"><a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/smash-karts"><img class="slot-img" src="https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=1200,height=1200,fit=cover,f=png/9c9e529b14731be871b07b89660bbc2a/smash-karts.png"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="slot-label">Smash Karts</span></a></div>
+    <div class="slot slot-regular" data-name="Moto 3XM"><a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/moto-3xm"><img class="slot-img" src="https://play-lh.googleusercontent.com/AbQMuT4ncBfWDqNF-4ubmfaRag59nrW3fJARDsHK51_PENScmWCnMFeQX81wfPlfGBo"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="slot-label">Moto 3XM</span></a></div>
+    <div class="slot slot-regular" data-name="Pac Man"><a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/pac-man"><img class="slot-img" src="https://th.bing.com/th/id/OIP.aSLxuxJj8Xp-ktMn-lStAwHaFu?o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="slot-label">Pac Man</span></a></div>
+    <div class="slot slot-regular" data-name="Gladihoppers"><a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/gladihoppers"><img class="slot-img" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhwkGz7jvunnkVMeuLAFqGLBviGpyP0GT8qQ&s"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="slot-label">Gladihoppers</span></a></div>
+    <div class="slot slot-regular" data-name="Gladihoppers"><a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/lichess"><img class="slot-img" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAABcVBMVEVHcEz+/v7x8fHt7e21tbVzc3MxMTEAAADg4OD9/f3V1dXDw8O3t7ewsLCkpKQmJiYhISEWFhYNDQ329vbm5uampqZHR0ccHBw3NzcqKipvb29hYWHs7OyFhYU1NTX09PSYmJjLy8suLi5EREStra3e3t78/Pzu7u7w8PA6Ojp/f3+6urq+vr76+vqurq7Z2dnOzs5RUVH4+PhjY2Pv7+9CQkLMzMzQ0NDKysqWlpbh4eG5ubmNjY17e3v5+fnX19fn5+fo6Oi4uLjFxcX19fX7+/tJSUlUVFTy8vKqqqp8fHyZmZnY2NhYWFjq6ur39/dAQEDT09O2trbR0dF4eHiLi4tTU1Pi4uLz8/Pf3989PT29vb2np6fl5eVpaWleXl6SkpKlpaWhoaF+fn6Pj4/GxsZ2dnaKiorp6emDg4NkZGSJiYmdnZ2jo6Pc3NyCgoLU1NTr6+uRkZHJycnAwMCzs7NqamqMjIygoKDHx8fPz88D/PwzAAAAAXRSTlMAQObYZgAAAa9JREFUeAFs01NjJFEYhOGpqHZ4+nyD3ti2bdtae2Pz3yeN8TzX72WVx4acPC7kkpdskCW/oLCIH2BLC7z5Pn8gWBBSBrWEs4JINGZ+LNakaRSXsBTxAI6yciW6Qmho04xWVjEKlxtUK11TW1dfCTQ0NgHN0pIetNZIcVs7EjpqajpTg64a3R2BxQtbT4y9Dcmgr0j682EZCMExWFM8lAyGDTUC2+gYXOMSm4gHlaaKwjEpU3BMK3MmHswqYw6O+YXFJTiWdc2SG6xwFXFrXN+AbbOWITfYkm0k7LBoF7YuyoYdhMkNJAXJ1U1Y9rhvB43kHFIMaR4cAsCUsN4KjsglpDr+ROOzF8AXlljBhPAr0jR+02rVC8wJ5+ABvsss0k38UOonME0JW8Ev/kaGhj+q+O/cP/6HFRyLPkGG9lOpKebikh3gjOfI1LNOuZiDE9RTBpApslOW3MMlzStkCC8hGcxfs/gGaW7TJ9d+R0bnkOC9BxrSZu19UCx6nIJtc+iJzz2Zv2j8ZZILLS+h4V7NrVcvMgOg8v7/At/F9t9WZYeSgVECmUnDCH8Gx5AFAB/6NpZvnRjnAAAAAElFTkSuQmCC"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="slot-label">Lichess</span></a></div>
+    <div class="slot slot-regular" data-name="Only Up"><a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/only-up"><img class="slot-img" src="data:image/png;base64,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"><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="slot-label">Only Up</span></a></div>
+    <div class="slot slot-regular" data-name="Mathaway"><a target="_blank" href="https://sites.google.com/view/gamesdeluxe-version-xlgex1s6ij/games/mathaway"><img class="slot-img" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAMAAABF0y+mAAAANlBMVEVHcEzbeXnbeHjdf3/////nmZnacnL46Oj99/fqs7PvxMTiioq7ISHEQEC3FxfPXV21Dg63GBgu9/lWAAAAEnRSTlMArv///////////////////66PHNCWAAAA2klEQVR4AXWPARZEMAxEu+0m0G7U/S+7Mymgz4BJvw8hfOJLPu/MKU6pxRduI2D6tog6k21MNzg41GEbmxmd7Kpsw3gxpxFrNAHG6XysmzLzDlWuz/IwJY9cSBSTPN4p6qqL6vBqqqs8MiH8ixlddTF2ZoxU3TihahwRUXwpy4QiLFE1lFIE+VmxhWVB+bEABDNzWK1kllysOgQ4oFWKVKt1sFLMlEtvurj4qYdFIJq52sHmNL+DOJIhCeUJc/ud9hv5ASmCgVLtIUWqd1harKWeY1jtNWsAfWV/TqcVwrHgJKMAAAAASUVORK5CYII="><div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="slot-label">Mathaway</span></a></div>
+
+    <!-- No results placeholder -->
+    <div class="no-results" id="noResults">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        <line x1="8" y1="11" x2="14" y2="11"/>
+      </svg>
+      <h3>No games found</h3>
+      <p>Try a different search term</p>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const searchInput = document.getElementById('search');
+  const slots = document.querySelectorAll('.slot[data-name]');
+  const noResults = document.getElementById('noResults');
+  const countBadge = document.getElementById('countBadge');
+
+  const total = slots.length;
+  countBadge.textContent = total + ' games';
+
+  searchInput.addEventListener('input', () => {
+    const q = searchInput.value.trim().toLowerCase();
+    let visible = 0;
+
+    slots.forEach(slot => {
+      const name = slot.dataset.name.toLowerCase();
+      const match = !q || name.includes(q);
+      slot.classList.toggle('hidden', !match);
+      if (match) visible++;
+    });
+
+    noResults.classList.toggle('show', visible === 0);
+    countBadge.textContent = q ? visible + ' of ' + total + ' games' : total + ' games';
+  });
+</script>
+
+</body>
+</html>
